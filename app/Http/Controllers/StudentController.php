@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\StudentsExport;
+
 
 class StudentController extends Controller
 {
@@ -36,11 +39,15 @@ class StudentController extends Controller
             'guardian_name' => 'required|string|max:255',
             'guardian_contact_no' => 'nullable|string|max:15',
             'guardian_address' => 'nullable|string|max:255',
+            'elementary_school_name' => 'required|string|max:255',
+            'elementary_school_address' => 'nullable|string|max:255',
             'high_school_name' => 'required|string|max:255',
-            'graduation_year' => 'required|integer|between:2000,2040', // Graduation year validation
+            'high_school_address' => 'nullable|string|max:255',
             'previous_college' => 'nullable|string|max:255',
-            'highest_level_completed' => 'required|string|max:255',
-            'college_year_level' => 'nullable|string',
+            'highest_level_completed' => 'required|string',
+            'college_year_level' => 'required|string|max:255',
+            'student_type' => 'nullable|string|max:255',
+
         ]);
     
         // Create the student without generating the student number
@@ -136,9 +143,17 @@ public function update(Request $request, $id)
         'father_name' => 'required|string|max:255',
         'mother_name' => 'required|string|max:255',
         'guardian_name' => 'required|string|max:255',
-        'high_school_name' => 'required|string|max:255',
-        'graduation_year' => 'required|integer|between:2000,2040',
-        'highest_level_completed' => 'required|string|max:255',
+        'guardian_contact_no' => 'nullable|string|max:15',
+        'guardian_address' => 'nullable|string|max:255',
+        'elementary_school_name' => 'required|string|max:255',
+        'elementary_school_address' => 'nullable|string|max:255',
+         'high_school_name' => 'required|string|max:255',
+        'high_school_address' => 'nullable|string|max:255',
+        'previous_college' => 'nullable|string|max:255',
+        'highest_level_completed' => 'required|string',
+        'college_year_level' => 'required|string|max:255',
+        'student_type' => 'nullable|string|max:255',
+
     ]);
 
     $student = Student::findOrFail($id);
@@ -155,4 +170,72 @@ public function destroy($id)
     return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
 }
 
+
+    // Get total number of students
+    public function totalStudents()
+    {
+        $totalStudents = Student::count();
+        return view('home', compact('totalStudents')); // Removed debug output
+    }
+
+    // Export students data
+    public function export(Request $request)
+    {
+        // Retrieve filter values from the request
+        $schoolYear = $request->input('school_year');
+        $program = $request->input('program');
+        $collegeYearLevel = $request->input('college_year_level');
+
+        // Pass the required arguments to the export class
+        return Excel::download(
+            new StudentsExport($schoolYear, $program, $collegeYearLevel), 
+            'students.xlsx'
+        );
+    }
+
+    // Get students by program
+    public function studentsByProgram(Request $request, $program)
+    {
+        // Retrieve the filtered values from the request
+        $schoolYear = $request->input('school_year');
+        $yearLevel = $request->input('college_year_level');
+
+        // Build the query to filter students based on selected criteria
+        $query = Student::where('program', $program);
+
+        // Apply school year filter if provided
+        if ($schoolYear) {
+            $query->where('school_year', $schoolYear);
+        }
+
+        // Apply college year level filter if provided
+        if ($yearLevel) {
+            $query->where('college_year_level', $yearLevel);
+        }
+
+        // Get the filtered students
+        $students = $query->get();
+
+        // Calculate the total students count after filtering
+        $totalStudents = $students->count();
+
+        // Pass the data to the view
+        return view('admin.View-Student.program', compact('students', 'totalStudents', 'program', 'schoolYear', 'yearLevel'));
+    }
+
+    // Show student profile
+    public function showStudentProfile($id)
+    {
+        $student = Student::findOrFail($id); // Fetch student data by ID
+
+        // Pass student data to the view
+        return view('admin.View-Student.search', compact('student'));
+    }
+
+    // Show student edit form
+    public function show($id)
+    {
+        $student = Student::findOrFail($id); // Fetch student or return 404
+        return view('admin.View-Student.edit', compact('student')); // Pass data to the view
+    }
 }

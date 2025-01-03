@@ -15,9 +15,26 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-<link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
-<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}" defer></script>
 
+    <style>
+        html, body {
+            background-color: #f0f0f0; /* Fallback color */
+            background-image: url('{{ asset('images/CEAT LOGO.png') }}'); /* Correct image path */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent repeating */
+            height: 100vh; /* Full height */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        /* Ensure body and html take full height for proper background coverage */
+        #app {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -33,7 +50,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <!-- Add any left side navbar items here -->
                     </ul>
 
                     <!-- Right Side Of Navbar -->

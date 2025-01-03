@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;  // Import the Student model
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
+        // Get the total number of students
+        $totalStudents = Student::count();
+
+        // Pass the totalStudents variable to the view
+        return view('home', compact('totalStudents'));
+    }               
 }

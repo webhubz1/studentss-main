@@ -9,7 +9,8 @@ return [
     |
     | This value is the name of your application, which will be used when the
     | framework needs to place the application's name in a notification or
-    | other UI elements where an application name needs to be displayed.
+    | ocomposer require maatwebsite/excel:^3.2
+ther UI elements where an application name needs to be displayed.
     |
     */
 
@@ -17,7 +18,8 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Environment
+    | Acomposer require maatwebsite/excel:^3.2
+plication Environment
     |--------------------------------------------------------------------------
     |
     | This value determines the "environment" your application is currently

@@ -27,8 +27,10 @@ class CreateStudentsTable extends Migration
             $table->string('guardian_name');
             $table->string('guardian_contact_no')->nullable();
             $table->string('guardian_address')->nullable();
-            $table->string('high_school_name');
-            $table->integer('graduation_year');
+            $table->string('elementary_school_name')->nullable(false)->change();
+            $table->string('elementary_school_address')->nullable(false)->change();
+            $table->string('high_school_name')->nullable();
+            $table->string('high_school_address')->nullable();
             $table->string('previous_college')->nullable();
             $table->string('highest_level_completed');
             $table->string('school_year');
